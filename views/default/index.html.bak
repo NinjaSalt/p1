@@ -1,0 +1,9 @@
+{{extend 'layout.html'}}
+<h1>Friend Code Land</h1>
+
+
+<div style="width: 50%; height: 220px; float:center;background:#F2F2F2;border: thick solid  #DF3A01;border-radius:25px; ">
+    <p>
+        This is friend code land and this is a place holder until I figure out what to write.
+    </p>
+</div>

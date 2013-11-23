@@ -1,0 +1,39 @@
+def get_user():
+    if auth.user:
+        return auth.user.email
+    else:
+        return 'None'
+
+auth.settings.extra_fields[auth.settings.ALL] = [Field('username', unique=True),
+   Field('user_owner', default=get_user(), unique=True),
+   Field('mystate',requires=IS_IN_SET(['California'])),
+   Field('friendcode'),
+   Field('picture', 'upload'),
+   Field('info', 'text'),
+   Field('games', requires=IS_IN_DB(db, 'games.game', '%(game)s', multiple=True))]
+
+auth.settings.table_user = db.define_table('auth_user',
+    Field('email', length=128,label=T('Email'), default='', unique=True),
+    Field('user_name', length=128, label=T('User name'), default='', unique=True, 
+        requires=IS_NOT_IN_DB(db, 'auth_user.user_name')
+    ),
+    Field('password', 'password', readable=False, label=T('Password'),
+        requires=CRYPT()
+    ),
+    Field('first_name', length=128, label=T('First name'), default='',
+        requires=(IS_NOT_EMPTY(error_message=auth.messages.is_empty),
+        IS_NOT_IN_DB(db, 'auth_user.first_name'))
+    ),
+    Field('last_name', length=128, label=T('Last name'), default='',
+        requires=(IS_NOT_EMPTY(error_message=auth.messages.is_empty),
+        IS_NOT_IN_DB(db, 'auth_user.last_name'))
+    ),
+    Field('registration_key', length=128, default='', writable=False, readable=False),
+    Field('country', 'string', length=15, label=T('Country'),
+        requires=IS_NULL_OR(IS_IN_SET(('England')))
+    ),
+)
+
+db.define_table('games',
+   Field('game'),
+   Field('imagelink'))
